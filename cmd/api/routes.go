@@ -8,6 +8,7 @@ func (app *application) routes() *chi.Mux {
 	mux.NotFound(app.notFoundResponse)
 	mux.MethodNotAllowed(app.methodNotAllowedResponse)
 
+	mux.Get("/v1/movies", app.listMoviesHandler)
 	mux.Get("/v1/healthcheck", app.healthcheckHandler)
 	mux.Post("/v1/movies", app.createMovieHandler)
 	mux.Get("/v1/movies/{id}", app.showMovieHandler)
