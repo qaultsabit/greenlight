@@ -3,17 +3,19 @@ package main
 import "github.com/go-chi/chi/v5"
 
 func (app *application) routes() *chi.Mux {
-	mux := chi.NewRouter()
+	router := chi.NewRouter()
 
-	mux.NotFound(app.notFoundResponse)
-	mux.MethodNotAllowed(app.methodNotAllowedResponse)
+	router.Use(app.recoverPanic)
 
-	mux.Get("/v1/movies", app.listMoviesHandler)
-	mux.Get("/v1/healthcheck", app.healthcheckHandler)
-	mux.Post("/v1/movies", app.createMovieHandler)
-	mux.Get("/v1/movies/{id}", app.showMovieHandler)
-	mux.Patch("/v1/movies/{id}", app.updateMovieHandler)
-	mux.Delete("/v1/movies/{id}", app.deleteMovieHandler)
+	router.NotFound(app.notFoundResponse)
+	router.MethodNotAllowed(app.methodNotAllowedResponse)
 
-	return mux
+	router.Get("/v1/movies", app.listMoviesHandler)
+	router.Get("/v1/healthcheck", app.healthcheckHandler)
+	router.Post("/v1/movies", app.createMovieHandler)
+	router.Get("/v1/movies/{id}", app.showMovieHandler)
+	router.Patch("/v1/movies/{id}", app.updateMovieHandler)
+	router.Delete("/v1/movies/{id}", app.deleteMovieHandler)
+
+	return router
 }
