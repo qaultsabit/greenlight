@@ -1,11 +1,13 @@
 package main
 
-import "github.com/go-chi/chi/v5"
+import (
+	"net/http"
 
-func (app *application) routes() *chi.Mux {
+	"github.com/go-chi/chi/v5"
+)
+
+func (app *application) routes() http.Handler {
 	router := chi.NewRouter()
-
-	router.Use(app.recoverPanic)
 
 	router.NotFound(app.notFoundResponse)
 	router.MethodNotAllowed(app.methodNotAllowedResponse)
@@ -17,5 +19,5 @@ func (app *application) routes() *chi.Mux {
 	router.Patch("/v1/movies/{id}", app.updateMovieHandler)
 	router.Delete("/v1/movies/{id}", app.deleteMovieHandler)
 
-	return router
+	return app.recoverPanic(app.rateLimit(router))
 }
